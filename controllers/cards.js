@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Card = require('../models/card');
 
 const ERROR_CODE = 400;
@@ -21,8 +22,12 @@ module.exports.createCard = (req, res) => {
     });
 };
 
+// eslint-disable-next-line consistent-return
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(cardId)) {
+    return res.status(ERROR_CODE).send({ message: 'Некорректный id карточки' });
+  }
   Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
@@ -30,7 +35,7 @@ module.exports.deleteCard = (req, res) => {
       }
       return res.send({ data: card });
     })
-    .catch((err) => res.status(500 || 400).send({ message: `Произошла ошибка: ${err}` }));
+    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
 module.exports.likeCard = (req, res) => {
