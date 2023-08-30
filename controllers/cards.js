@@ -38,9 +38,13 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
+// eslint-disable-next-line consistent-return
 module.exports.likeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
+  if (!mongoose.Types.ObjectId.isValid(cardId)) {
+    return res.status(ERROR_CODE).send({ message: 'Некорректный id карточки' });
+  }
   Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: userId } },
@@ -56,9 +60,13 @@ module.exports.likeCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
+// eslint-disable-next-line consistent-return
 module.exports.dislikeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
+  if (!mongoose.Types.ObjectId.isValid(cardId)) {
+    return res.status(ERROR_CODE).send({ message: 'Некорректный id карточки' });
+  }
   Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: userId } },
