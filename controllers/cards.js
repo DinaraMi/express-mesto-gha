@@ -30,7 +30,7 @@ module.exports.deleteCard = (req, res) => {
       }
       return res.send({ data: card });
     })
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
+    .catch((err) => res.status(500 || 400).send({ message: `Произошла ошибка: ${err}` }));
 };
 
 module.exports.likeCard = (req, res) => {
