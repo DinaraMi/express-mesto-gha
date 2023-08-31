@@ -5,7 +5,6 @@ const ERROR_CODE = 400;
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .populate('owner')
     .then((cards) => res.send({ data: cards }))
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
@@ -22,7 +21,6 @@ module.exports.createCard = (req, res) => {
     });
 };
 
-// eslint-disable-next-line consistent-return
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(cardId)) {
@@ -38,7 +36,6 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
-// eslint-disable-next-line consistent-return
 module.exports.likeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
@@ -50,7 +47,6 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: userId } },
     { new: true },
   )
-    .populate('owner')
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: 'Карточка не найдена' });
@@ -60,7 +56,6 @@ module.exports.likeCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
-// eslint-disable-next-line consistent-return
 module.exports.dislikeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
@@ -72,7 +67,6 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: userId } },
     { new: true },
   )
-    .populate('owner')
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: 'Карточка не найдена' });
