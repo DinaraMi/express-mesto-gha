@@ -21,13 +21,12 @@ module.exports.getUsers = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
-// eslint-disable-next-line consistent-return
 module.exports.getUserId = (req, res) => {
   const { userId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(ERROR_CODE).send({ message: 'Некорректный id пользователя' });
   }
-  User.findById(userId)
+  return User.findById(userId)
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: 'Пользователь не найден' });

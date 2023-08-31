@@ -21,13 +21,12 @@ module.exports.createCard = (req, res) => {
     });
 };
 
-// eslint-disable-next-line consistent-return
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(cardId)) {
     return res.status(ERROR_CODE).send({ message: 'Некорректный id карточки' });
   }
-  Card.findByIdAndRemove(cardId)
+  return Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: 'Карточка не найдена' });
@@ -37,14 +36,13 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
-// eslint-disable-next-line consistent-return
 module.exports.likeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
   if (!mongoose.Types.ObjectId.isValid(cardId)) {
     return res.status(ERROR_CODE).send({ message: 'Некорректный id карточки' });
   }
-  Card.findByIdAndUpdate(
+  return Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: userId } },
     { new: true },
@@ -58,14 +56,13 @@ module.exports.likeCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
-// eslint-disable-next-line consistent-return
 module.exports.dislikeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
   if (!mongoose.Types.ObjectId.isValid(cardId)) {
     return res.status(ERROR_CODE).send({ message: 'Некорректный id карточки' });
   }
-  Card.findByIdAndUpdate(
+  return Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: userId } },
     { new: true },
