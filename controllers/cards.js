@@ -21,6 +21,7 @@ module.exports.createCard = (req, res) => {
     });
 };
 
+// eslint-disable-next-line consistent-return
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(cardId)) {
@@ -36,6 +37,7 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
+// eslint-disable-next-line consistent-return
 module.exports.likeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
@@ -56,6 +58,7 @@ module.exports.likeCard = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 
+// eslint-disable-next-line consistent-return
 module.exports.dislikeCard = (req, res) => {
   const { cardId } = req.params;
   const userId = req.user._id;
