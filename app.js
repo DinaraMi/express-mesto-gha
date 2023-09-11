@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
@@ -17,8 +18,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useUnifiedTopology: true,
   family: 4,
 });
-app.use('/users', auth, usersRouter);
-app.use('/cards', auth, cardsRouter);
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -39,6 +39,9 @@ app.post('/signup', celebrate({
 app.use((req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
+app.use(errors());
 app.use(handleErrors);
 app.listen(PORT, () => {
 });
