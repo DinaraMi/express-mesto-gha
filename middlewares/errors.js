@@ -14,5 +14,7 @@ module.exports.handleErrors = (err, req, res) => {
   if (err.name === 'TokenExpiredError') {
     return res.status(401).send({ message: 'Истек срок действия токена' });
   }
-  return res.status(500).send({ message: 'На сервере произошла ошибка' });
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'На сервере произошла ошибка';
+  return res.status(statusCode).send({ message });
 };
