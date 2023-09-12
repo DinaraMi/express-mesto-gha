@@ -138,19 +138,19 @@ module.exports.login = (req, res, next) => {
     });
 };
 
-// module.exports.getUserInfo = (req, res, next) => {
-//   User.findById(req.user._id)
-//     .then((userInfo) => {
-//       if (!userInfo) {
-//         return res.status(404).send({ message: 'Пользователь с таким id не найден' });
-//       }
-//       return res.status(200).send({ data: userInfo });
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new Error(`Некорректные данные: ${err.message}`));
-//       } else {
-//         next(new Error(`Произошла ошибка на сервере: ${err}`));
-//       }
-//     });
-// };
+module.exports.getUserInfo = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((userInfo) => {
+      if (!userInfo) {
+        return res.status(404).send({ message: 'Пользователь с таким id не найден' });
+      }
+      return res.status(200).send({ data: userInfo });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new Error(`Некорректные данные: ${err.message}`));
+      } else {
+        next(new Error(`Произошла ошибка на сервере: ${err}`));
+      }
+    });
+};

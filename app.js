@@ -4,7 +4,7 @@ const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const { createUser, login } = require('./controllers/users');
+const { createUser, login, getUserInfo } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { handleErrors } = require('./middlewares/errors');
 
@@ -36,10 +36,7 @@ app.post('/signup', celebrate({
     password: Joi.string().required().min(8),
   }),
 }), createUser);
-app.get('/users/me', auth, (req, res) => {
-  const currentUser = req.user;
-  res.send(currentUser);
-});
+app.get('/users/me', auth, getUserInfo);
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 app.use((req, res) => {
