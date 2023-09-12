@@ -17,7 +17,7 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
-        return res.status(ERROR_CODE).send({ message: 'Email уже зарегистрирован' });
+        return res.status(409).send({ message: 'Пользователь с таким email уже существует' });
       }
       if (!validator.isEmail(email)) {
         return res.status(ERROR_CODE).send({ message: 'Некорректный формат email' });
@@ -119,12 +119,15 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      if (!user) {
+        return res.status(401).send({ message: 'Неправильные почта или пароль' });
+      }
       const token = jwt.sign(
         { _id: user._id },
         'some-secret-key',
         { expiresIn: '7d' },
       );
-      res.send({ token });
+      return res.send({ token });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'JsonWebTokenError') {
