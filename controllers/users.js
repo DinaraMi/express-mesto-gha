@@ -133,7 +133,7 @@ module.exports.login = (req, res, next) => {
       if (err.name === 'ValidationError' || err.name === 'JsonWebTokenError') {
         next(err);
       } else {
-        next(new Error(`Произошла ошибка: ${err}`));
+        res.status(401).send({ message: 'Неправильные почта или пароль' });
       }
     });
 };
