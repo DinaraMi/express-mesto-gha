@@ -79,7 +79,10 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => res.status(Ok).res.send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        return next(new ValidationError(`Пользователь не найден: ${error.message}`));
+        return next(new ValidationError(`Некорректные данные: ${error.message}`));
+      }
+      if (error.name === 'NotFoundError') {
+        return next(new NotFoundError('Пользователь с таким id не найден'));
       }
       return next(error);
     });
@@ -96,7 +99,10 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((user) => res.status(Ok).res.send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        return next(new ValidationError(`Пользователь не найден: ${error.message}`));
+        return next(new ValidationError(`Некорректные данные: ${error.message}`));
+      }
+      if (error.name === 'NotFoundError') {
+        return next(new NotFoundError('Пользователь не найден'));
       }
       return next(error);
     });
@@ -121,7 +127,10 @@ module.exports.getUserInfo = (req, res, next) => {
     .then((userInfo) => res.status(Ok).res.send({ data: userInfo }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        return next(new ValidationError(`Пользователь с таким id не найден: ${error.message}`));
+        return next(new ValidationError(`Некорректные данные: ${error.message}`));
+      }
+      if (error.name === 'NotFoundError') {
+        return next(new NotFoundError('Пользователь с таким id не найден'));
       }
       return next(error);
     });
