@@ -42,9 +42,9 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 // app.use(() => {
 //   throw new Custom404Error('Запрашиваемый ресурс не найден');
 // });
-app.get('/', (req, res) => {
-  res.send('Запрос выполнен успешно');
-});
+// app.get('/', (req, res) => {
+//   res.send('Запрос выполнен успешно');
+// });
 app.use('/', require('./routes/index'));
 
 app.use(errors());

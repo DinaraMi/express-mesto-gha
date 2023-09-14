@@ -10,8 +10,8 @@ router.use('/signin', signinRouter);
 router.use('/signup', signupRouter);
 router.use('/users', auth, usersRouter);
 router.use('/cards', auth, cardsRouter);
-router.use(() => {
-  throw new Custom404Error('Запрашиваемый ресурс не найден');
+router.use('*', (req, res, next) => {
+  next(new Custom404Error('Запрашиваемый ресурс не найден'));
 });
 
 module.exports = router;
