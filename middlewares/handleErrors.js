@@ -1,18 +1,37 @@
-module.exports.handleErrors = (err, req, res) => {
-  if (err.name === 'ValidationError') {
-    return res.status(400).send({ message: 'Переданы некорректные данные' });
+const ValidationError = require('../errors/ValidationError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
+const ConflictError = require('../errors/ConflictError');
+const {
+  BadRequest,
+  Unauthorized,
+  NotFound,
+  Conflict,
+  InternalServerError,
+  Forbidden,
+} = require('../utils/contants');
+
+const handleErrors = (err, req, res, next) => {
+  if (err instanceof ValidationError) {
+    return res.status(BadRequest).send({ message: `Некорректные данные: ${err.message}` });
   }
-  if (err.name === 'CastError') {
-    return res.status(400).send({ message: `Некорректные данные: ${err.message}` });
+  if (err instanceof NotFoundError) {
+    return res.status(NotFound).send({ message: 'Пользователь не найден' });
   }
-  if (err.code === 11000) {
-    return res.status(409).send({ message: 'Пользователь с таким email уже существует' });
+  if (err instanceof ConflictError) {
+    return res.status(Conflict).send({ message: 'Пользователь с таким email уже существует' });
   }
-  if (err.name === 'JsonWebTokenError') {
-    return res.status(401).send({ message: 'Некорректный токен' });
+  if (err instanceof ForbiddenError) {
+    return res.status(Forbidden).send({ message: 'Доступ запрещен' });
   }
-  if (err.name === 'TokenExpiredError') {
-    return res.status(401).send({ message: 'Истек срок действия токена' });
+  if (err instanceof UnauthorizedError) {
+    return res.status(Unauthorized).send({ message: 'Неавторизованный доступ' });
   }
-  return res.status(500).send({ message: 'На сервере произошла ошибка' });
+  if (!res.headersSent) {
+    return res.status(InternalServerError).send({ message: 'На сервере произошла ошибка' });
+  }
+  return next(err);
 };
+
+module.exports = { handleErrors };
