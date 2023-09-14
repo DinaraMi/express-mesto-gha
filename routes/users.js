@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const auth = require('../middlewares/auth');
+
 const {
   getUsers,
   getUserId,
@@ -10,7 +10,7 @@ const {
 } = require('../controllers/users');
 
 router.get('/', getUsers);
-router.get('/me', auth, getUserInfo);
+router.get('/me', getUserInfo);
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().length(24).hex().required(),

@@ -1,11 +1,7 @@
-// const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-// const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
-
-// const ERROR_CODE = 400;
 
 module.exports.createUser = async (req, res, next) => {
   try {
