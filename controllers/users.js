@@ -4,7 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
-const { Created, Ok } = require('../utils/contants');
+const { Created, Ok, NotFound } = require('../utils/contants');
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -56,13 +56,15 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUserId = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
-    .then((user) => res.status(Ok).send({ data: user }))
+    .then((user) => {
+      if (!user) {
+        return res.status(NotFound).send({ message: 'Пользователь с таким id не найден' });
+      }
+      return res.status(Ok).send({ data: user });
+    })
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return next(new ValidationError(`Пользователь не найден: ${error.message}`));
-      }
-      if (error.name === 'NotFoundError') {
-        return next(new NotFoundError('Пользователь с таким id не найден'));
       }
       return next(error);
     });
