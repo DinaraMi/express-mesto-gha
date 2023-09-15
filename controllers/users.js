@@ -49,14 +49,14 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(Ok).res.send({ data: users }))
+    .then((users) => res.status(Ok).send({ data: users }))
     .catch(next);
 };
 
 module.exports.getUserId = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
-    .then((user) => res.status(Ok).res.send({ data: user }))
+    .then((user) => res.status(Ok).send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return next(new ValidationError(`Пользователь не найден: ${error.message}`));
@@ -76,7 +76,7 @@ module.exports.updateProfile = (req, res, next) => {
     { name, about },
     { new: true, runValidators: true },
   )
-    .then((user) => res.status(Ok).res.send({ data: user }))
+    .then((user) => res.status(Ok).send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return next(new ValidationError(`Некорректные данные: ${error.message}`));
@@ -96,7 +96,7 @@ module.exports.updateAvatar = (req, res, next) => {
     { avatar },
     { new: true, runValidators: true },
   )
-    .then((user) => res.status(Ok).res.send({ data: user }))
+    .then((user) => res.status(Ok).send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return next(new ValidationError(`Некорректные данные: ${error.message}`));
@@ -124,7 +124,7 @@ module.exports.login = (req, res, next) => {
 
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
-    .then((userInfo) => res.status(Ok).res.send({ data: userInfo }))
+    .then((userInfo) => res.status(Ok).send({ data: userInfo }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return next(new ValidationError(`Некорректные данные: ${error.message}`));
