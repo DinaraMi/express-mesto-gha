@@ -11,9 +11,6 @@
   "keywords": [],
   "author": "Dinara Mikhailova <d9268843743@yandex.ru>",
   "license": "ISC",
-  "engines": {
-    "node": ">=16"
-  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "celebrate": "^15.0.1",
