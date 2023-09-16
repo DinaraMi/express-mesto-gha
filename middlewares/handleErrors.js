@@ -12,6 +12,7 @@ const {
   Forbidden,
 } = require('../utils/contants');
 
+// eslint-disable-next-line consistent-return
 const handleErrors = (err, req, res, next) => {
   if (err instanceof ValidationError) {
     return res.status(BadRequest).send({ message: `Некорректные данные: ${err.message}` });
@@ -31,7 +32,7 @@ const handleErrors = (err, req, res, next) => {
   if (!res.headersSent) {
     return res.status(InternalServerError).send({ message: 'На сервере произошла ошибка' });
   }
-  return next(err);
+  next(err);
 };
 
 module.exports = { handleErrors };
