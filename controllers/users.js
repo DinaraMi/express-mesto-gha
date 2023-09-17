@@ -4,7 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
-const { Created, Ok, NotFound } = require('../utils/contants');
+const { Created, Ok } = require('../utils/contants');
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -58,7 +58,7 @@ module.exports.getUserId = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        return res.status(NotFound).send({ message: 'Пользователь с таким id не найден' });
+        throw new NotFoundError('Пользователь с таким id не найден');
       }
       return res.status(Ok).send({ data: user });
     })
@@ -78,13 +78,15 @@ module.exports.updateProfile = (req, res, next) => {
     { name, about },
     { new: true, runValidators: true },
   )
-    .then((user) => res.status(Ok).send({ data: user }))
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь с таким id не найден');
+      }
+      return res.status(Ok).send({ data: user });
+    })
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return next(new ValidationError(`Некорректные данные: ${error.message}`));
-      }
-      if (error.name === 'NotFoundError') {
-        return next(new NotFoundError('Пользователь с таким id не найден'));
       }
       return next(error);
     });
@@ -98,13 +100,15 @@ module.exports.updateAvatar = (req, res, next) => {
     { avatar },
     { new: true, runValidators: true },
   )
-    .then((user) => res.status(Ok).send({ data: user }))
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь с таким id не найден');
+      }
+      return res.status(Ok).send({ data: user });
+    })
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return next(new ValidationError(`Некорректные данные: ${error.message}`));
-      }
-      if (error.name === 'NotFoundError') {
-        return next(new NotFoundError('Пользователь не найден'));
       }
       return next(error);
     });
