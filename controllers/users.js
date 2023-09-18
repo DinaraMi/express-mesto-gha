@@ -130,13 +130,15 @@ module.exports.login = (req, res, next) => {
 
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
-    .then((userInfo) => res.status(Ok).send({ data: userInfo }))
+    .then((userInfo) => {
+      if (!userInfo) {
+        throw new NotFoundError('Пользователь с таким id не найден');
+      }
+      res.status(200).send({ data: userInfo });
+    })
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return next(new ValidationError(`Некорректные данные: ${error.message}`));
-      }
-      if (error.name === 'NotFoundError') {
-        return next(new NotFoundError('Пользователь с таким id не найден'));
       }
       return next(error);
     });
